@@ -1,3 +1,14 @@
 <resources>
-  <string name="app_name">Currency Converter</string>
+  <string name="app_name">Waluty</string>
+
+  <string name="no_internet_connection">Brak połączenia z internetem</string>
+  <string name="connectivity_exception">Nie udało połączyć się z serwerem</string>
+  <string name="unexpected_error">Wystąpił nieoczekiwany błąd</string>
+  <string name="try_again">Spróbuj ponownie</string>
+
+  <string name="currency_converter">Przelicznik walut</string>
+  <string name="currencies">Waluty</string>
+  <string name="rates_from_day">Stan kursów na dzień:\n %1$s</string>
+
+  <string name="error_icon">Ikona błędu</string>
 </resources>
