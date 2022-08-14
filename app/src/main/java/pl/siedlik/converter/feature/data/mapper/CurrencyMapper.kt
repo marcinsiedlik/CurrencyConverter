@@ -11,7 +11,7 @@ class CurrencyMapper @Inject constructor() {
   fun mapToEntity(currencyModel: CurrencyModel) = Currency(
     code = currencyModel.code,
     name = currencyModel.currency,
-    rate = currencyModel.mid,
+    rate = currencyModel.mid.toBigDecimal(),
   )
 
   fun mapToEntity(dateModel: String) = RatesUpdateDate(

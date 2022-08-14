@@ -14,11 +14,11 @@ class CurrencyRemoteDataSource @Inject constructor(
 ) : RemoteDataSource {
 
   suspend fun getExchangeRates(): ExchangeRatesModel = ktorCall {
-    val response = httpClient.get("exchangerates/tables/$TableType")
+    val response = httpClient.get(GetExchangeRateEndpoint)
     return@ktorCall response.body<List<ExchangeRatesModel>>().first()
   }
 
   companion object {
-    private const val TableType = "a"
+    const val GetExchangeRateEndpoint = "exchangerates/tables/a"
   }
 }

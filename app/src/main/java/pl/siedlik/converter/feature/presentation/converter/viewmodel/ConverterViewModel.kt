@@ -8,14 +8,15 @@ import pl.siedlik.converter.core.util.ResultOf
 import pl.siedlik.converter.feature.domain.entity.Currency
 import pl.siedlik.converter.feature.domain.usecase.*
 import pl.siedlik.converter.feature.presentation.converter.model.CurrencyType
+import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltViewModel
 class ConverterViewModel @Inject constructor(
   private val getCurrenciesUseCase: GetCurrenciesUseCase,
   private val getUpdateDateUseCase: GetRatesUpdateDateUseCase,
-  private val formatAmountInputUseCase: FormatAmountInputUseCase,
-  private val convertStringToDoubleUseCase: ConvertStringToDoubleUseCase,
+  private val validateAmountInputUseCase: ValidateAmountInputUseCase,
+  private val convertStringToDecimalUseCase: ConvertStringToDecimalUseCase,
   private val convertCurrencyUseCase: ConvertCurrencyUseCase,
 ) : InteractionViewModel<ConverterState>(ConverterState.initial()) {
 
@@ -49,17 +50,21 @@ class ConverterViewModel @Inject constructor(
   }
 
   fun onAmountInputChange(value: String) {
-    val fromAmount = formatAmountInputUseCase(state.fromAmount, value)
-    val toAmount = convertRates(input = fromAmount)
-    state = state.copy(fromAmount = fromAmount, toAmount = toAmount)
+    val dotOnly = value.replace(',', '.')
+    if (validateAmountInputUseCase(dotOnly)) {
+      state = state.copy(
+        fromAmount = dotOnly,
+        toAmount = convertRates(input = dotOnly)
+      )
+    }
   }
 
   private fun convertRates(
     from: Currency = state.fromCurrency,
     to: Currency = state.toCurrency,
     input: String,
-  ): Double? {
-    val fromAmount = convertStringToDoubleUseCase(input) ?: return null
+  ): BigDecimal? {
+    val fromAmount = convertStringToDecimalUseCase(input) ?: return null
     return convertCurrencyUseCase(from, to, fromAmount)
   }
 

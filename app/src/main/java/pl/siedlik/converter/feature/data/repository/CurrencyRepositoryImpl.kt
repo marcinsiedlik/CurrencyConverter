@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class CurrencyRepositoryImpl @Inject constructor(
   private val remoteDataSource: CurrencyRemoteDataSource,
-  private val localDateSource: CurrencyLocalDataSource,
+  private val localDataSource: CurrencyLocalDataSource,
   private val mapper: CurrencyMapper,
   private val networkInfo: NetworkInfo,
   @HiltDispatchers.IO private val coroutineDispatcher: CoroutineDispatcher,
@@ -25,20 +25,20 @@ class CurrencyRepositoryImpl @Inject constructor(
 
   override suspend fun getCurrencies(): List<Currency> = withContext(coroutineDispatcher) {
     val currencies = when {
-      !networkInfo.isAvailable -> localDateSource.getCurrencies()
+      !networkInfo.isAvailable -> localDataSource.getCurrencies()
       else -> try {
         remoteDataSource.getExchangeRates().also { model ->
-          localDateSource.saveCurrencies(model.effectiveDate, model.rates)
+          localDataSource.saveCurrencies(model.effectiveDate, model.rates)
         }.rates
       } catch (e: NetworkException) {
-        localDateSource.getCurrencies()
+        localDataSource.getCurrencies()
       }
     }
     return@withContext currencies.map(mapper::mapToEntity)
   }
 
   override suspend fun getUpdateDate(): RatesUpdateDate? = withContext(coroutineDispatcher) {
-    val model = localDateSource.getEffectiveDate()
+    val model = localDataSource.getEffectiveDate()
     return@withContext model?.let(mapper::mapToEntity)
   }
 }

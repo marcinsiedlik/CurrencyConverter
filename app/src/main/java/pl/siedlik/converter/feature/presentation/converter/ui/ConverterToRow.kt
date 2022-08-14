@@ -9,12 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.math.BigDecimal
 
 @Composable
 fun ConverterToRow(
   modifier: Modifier = Modifier,
   currencyCode: String,
-  amount: Double?,
+  amount: BigDecimal?,
   onCurrencyClick: () -> Unit,
 ) {
   Row(

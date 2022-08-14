@@ -34,6 +34,6 @@ class CurrencyLocalDataSource @Inject constructor(
   }
 
   companion object {
-    private val lastUpdateKey = stringPreferencesKey("currency_last_update")
+    val lastUpdateKey = stringPreferencesKey("currency_last_update")
   }
 }

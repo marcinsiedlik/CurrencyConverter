@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
+import io.ktor.client.engine.*
 import io.ktor.client.engine.okhttp.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -22,9 +23,15 @@ object NetworkModule {
   @Provides
   fun provideLogger(): Logger = TimberLogger()
 
+  @Provides
+  @Singleton
+  fun provideHttpEngine(): HttpClientEngine = OkHttpEngine(
+    config = OkHttpConfig()
+  )
+
   @Singleton
   @Provides
-  fun provideHttpClient(logging: Logger): HttpClient = HttpClient(OkHttp) {
+  fun provideHttpClient(logging: Logger, engine: HttpClientEngine): HttpClient = HttpClient(engine) {
     expectSuccess = true
 
     defaultRequest {
